@@ -19,8 +19,8 @@ contract UniswapV2ERC20 is IUniswapV2ERC20 {
 
     mapping(address => uint256) public nonces;
 
-    event Approval(address indexed owner, address indexed spender, uint256 value);
-    event Transfer(address indexed from, address indexed to, uint256 value);
+    // event Approval(address indexed owner, address indexed spender, uint256 value);
+    // event Transfer(address indexed from, address indexed to, uint256 value);
 
     constructor() {
         uint256 chainId = block.chainid;
@@ -42,8 +42,8 @@ contract UniswapV2ERC20 is IUniswapV2ERC20 {
     }
 
     function _burn(address from, uint256 value) internal {
-        balanceOf[from] = balanceOf[from].sub(value, "UniswapV2: burn amount exceeds balance");
-        totalSupply = totalSupply.sub(value, "UniswapV2: burn amount exceeds total supply");
+        balanceOf[from] = balanceOf[from].sub(value);
+        totalSupply = totalSupply.sub(value);
         emit Transfer(from, address(0), value);
     }
 
@@ -56,7 +56,7 @@ contract UniswapV2ERC20 is IUniswapV2ERC20 {
         require(from != address(0), "UniswapV2: transfer from the zero address");
         require(to != address(0), "UniswapV2: transfer to the zero address");
 
-        balanceOf[from] = balanceOf[from].sub(value, "UniswapV2: transfer amount exceeds balance");
+        balanceOf[from] = balanceOf[from].sub(value);
         balanceOf[to] = balanceOf[to].add(value);
         emit Transfer(from, to, value);
     }
@@ -73,7 +73,7 @@ contract UniswapV2ERC20 is IUniswapV2ERC20 {
 
     function transferFrom(address from, address to, uint256 value) external override returns (bool) {
         if (allowance[from][msg.sender] != type(uint256).max) {
-            allowance[from][msg.sender] = allowance[from][msg.sender].sub(value, "UniswapV2: transfer amount exceeds allowance");
+            allowance[from][msg.sender] = allowance[from][msg.sender].sub(value);
         }
         _transfer(from, to, value);
         return true;
