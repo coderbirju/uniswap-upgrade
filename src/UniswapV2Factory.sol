@@ -24,11 +24,11 @@ contract UniswapV2Factory {
     mapping(address => mapping(address => address)) public getPair;
     address[] public allPairs;
 
-    constructor(address _feeToSetter) {
-        feeToSetter = _feeToSetter;
-    }
+    // constructor(address _feeToSetter) {
+    //     feeToSetter = _feeToSetter;
+    // }
 
-    function allPairsLength() external view override returns (uint) {
+    function allPairsLength() public view returns (uint) {
         return allPairs.length;
     }
 
@@ -37,15 +37,15 @@ contract UniswapV2Factory {
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
         if (token0 == address(0)) revert ZeroAddress();
 
-        if (pairs[token0][token1] != address(0)) revert PairExists(); // single check is sufficient
+        if (getPair[token0][token1] != address(0)) revert PairExists(); // single check is sufficient
         bytes memory bytecode = type(UniswapV2Pair).creationCode;
         bytes32 salt = keccak256(abi.encodePacked(token0, token1));
         assembly {
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
         IUniswapV2Pair(pair).initialize(token0, token1);
-        pairs[token0][token1] = pair;
-        pairs[token1][token0] = pair;
+        getPair[token0][token1] = pair;
+        getPair[token1][token0] = pair;
         allPairs.push(pair);
 
         emit PairCreated(token0, token1, pair, allPairs.length);

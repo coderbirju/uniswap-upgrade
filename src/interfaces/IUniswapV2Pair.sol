@@ -10,6 +10,13 @@ interface IUniswapV2Pair {
     function mint(address to) external returns (uint256 liquidity);
     function burn(address to) external returns (uint256 amount0, uint256 amount1);
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;
+
+    function transferFrom(
+        address,
+        address,
+        uint256
+    ) external returns (bool);
+
     // event Approval(address indexed owner, address indexed spender, uint256 value);
     // event Transfer(address indexed from, address indexed to, uint256 value);
 
