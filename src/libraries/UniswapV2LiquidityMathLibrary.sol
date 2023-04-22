@@ -1,9 +1,9 @@
-pragma solidity >=0.5.0;
+pragma solidity >=0.8.0;
 
-import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol';
-import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol';
-import '@uniswap/lib/contracts/libraries/Babylonian.sol';
-import '@uniswap/lib/contracts/libraries/FullMath.sol';
+import '../interfaces/IUniswapV2Pair.sol';
+import '../interfaces/IUniswapV2Factory.sol';
+import 'solidity-lib/contracts/libraries/Babylonian.sol';
+import 'solidity-lib/contracts/libraries/FullMath.sol';
 
 import './SafeMath.sol';
 import './UniswapV2Library.sol';

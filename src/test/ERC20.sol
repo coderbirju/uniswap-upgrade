@@ -1,12 +1,12 @@
-pragma solidity =0.6.6;
+pragma solidity >=0.8.0;
 
 import '../libraries/SafeMath.sol';
 
-contract DeflatingERC20 {
+contract ERC20 {
     using SafeMath for uint;
 
-    string public constant name = 'Deflating Test Token';
-    string public constant symbol = 'DTT';
+    string public constant name = 'Test Token';
+    string public constant symbol = 'TT';
     uint8 public constant decimals = 18;
     uint  public totalSupply;
     mapping(address => uint) public balanceOf;
@@ -20,7 +20,7 @@ contract DeflatingERC20 {
     event Approval(address indexed owner, address indexed spender, uint value);
     event Transfer(address indexed from, address indexed to, uint value);
 
-    constructor(uint _totalSupply) public {
+    constructor(uint _totalSupply) {
         uint chainId;
         assembly {
             chainId := chainid()
@@ -55,12 +55,9 @@ contract DeflatingERC20 {
     }
 
     function _transfer(address from, address to, uint value) private {
-        uint burnAmount = value / 100;
-        _burn(from, burnAmount);
-        uint transferAmount = value.sub(burnAmount);
-        balanceOf[from] = balanceOf[from].sub(transferAmount);
-        balanceOf[to] = balanceOf[to].add(transferAmount);
-        emit Transfer(from, to, transferAmount);
+        balanceOf[from] = balanceOf[from].sub(value);
+        balanceOf[to] = balanceOf[to].add(value);
+        emit Transfer(from, to, value);
     }
 
     function approve(address spender, uint value) external returns (bool) {
@@ -74,7 +71,7 @@ contract DeflatingERC20 {
     }
 
     function transferFrom(address from, address to, uint value) external returns (bool) {
-        if (allowance[from][msg.sender] != uint(-1)) {
+        if (allowance[from][msg.sender] != type(uint).max) {
             allowance[from][msg.sender] = allowance[from][msg.sender].sub(value);
         }
         _transfer(from, to, value);
