@@ -32,7 +32,7 @@ contract UniswapV2FactoryTest is Test {
         encoded = abi.encodeWithSignature(error);
     }
 
-    function testCreatePair() public {
+    function test_CreatePair() public {
         address pairAddress = factory.createPair(
             address(token1),
             address(token0)
@@ -44,7 +44,7 @@ contract UniswapV2FactoryTest is Test {
         assertEq(pair.token1(), address(token1));
     }
 
-    function testCreatePairZeroAddress() public {
+    function test_CreatePair_ZeroAddress() public {
         vm.expectRevert(encodeError("ZeroAddress()"));
         factory.createPair(address(0), address(token0));
 
@@ -52,14 +52,14 @@ contract UniswapV2FactoryTest is Test {
         factory.createPair(address(token1), address(0));
     }
 
-    function testCreatePairPairExists() public {
+    function test_CreatePairPairDuplicate() public {
         factory.createPair(address(token1), address(token0));
 
         vm.expectRevert(encodeError("PairExists()"));
         factory.createPair(address(token1), address(token0));
     }
 
-    function testCreatePairIdenticalTokens() public {
+    function test_CreatePair_IdenticalTokens() public {
         vm.expectRevert(encodeError("IdenticalAddresses()"));
         factory.createPair(address(token0), address(token0));
     }

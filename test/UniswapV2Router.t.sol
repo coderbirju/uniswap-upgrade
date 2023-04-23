@@ -5,13 +5,14 @@ import "../lib/forge-std/src/Test.sol";
 
 import "../src/UniswapV2Factory.sol";
 import "../src/UniswapV2Pair.sol";
-import "../src/UniswapV2Router02.sol";
+import "../src/UniswapV2Router.sol";
 import "./fakes/DummyErc20.sol";
+
 
 
 contract UniswapV2RouterTest is Test {
     UniswapV2Factory factory;
-    UniswapV2Router02 router;
+    UniswapV2Router router;
 
     DummyErc20 tokenA;
     DummyErc20 tokenB;
@@ -19,7 +20,7 @@ contract UniswapV2RouterTest is Test {
 
     function setUp() public {
         factory = new UniswapV2Factory();
-        router = new UniswapV2Router02(address(factory));
+        router = new UniswapV2Router(address(factory));
 
         tokenA = new DummyErc20("Token A", "TKNA");
         tokenB = new DummyErc20("Token B", "TKNB");
@@ -39,7 +40,7 @@ contract UniswapV2RouterTest is Test {
     }
 
 
-    function testAddLiquidityNoPair() public {
+    function test_AddLiquidityNoPair() public {
         tokenA.approve(address(router), 1 ether);
         tokenB.approve(address(router), 1 ether);
 
@@ -58,7 +59,7 @@ contract UniswapV2RouterTest is Test {
         assertEq(amountB, 1 ether);
         assertEq(liquidity, 1 ether - 1000);
 
-        address pairAddress = factory.getPair(address(tokenA), address(tokenB));
+        address pairAddress = factory.pairs(address(tokenA), address(tokenB));
 
         assertEq(tokenA.balanceOf(pairAddress), 1 ether);
         assertEq(tokenB.balanceOf(pairAddress), 1 ether);
@@ -74,7 +75,7 @@ contract UniswapV2RouterTest is Test {
         assertEq(tokenB.balanceOf(address(this)), 19 ether);
     }
 
-    function testAddLiquidityAmountBOptimalIsOk() public {
+    function test_AddLiquidityAmountBOptimalIsOk() public {
         address pairAddress = factory.createPair(
             address(tokenA),
             address(tokenB)
@@ -108,7 +109,7 @@ contract UniswapV2RouterTest is Test {
         assertEq(liquidity, 1414213562373095048);
     }
 
-    function testAddLiquidityAmountBOptimalIsTooLow() public {
+    function test_AddLiquidityAmountBOptimalIsTooLow() public {
         address pairAddress = factory.createPair(
             address(tokenA),
             address(tokenB)
@@ -137,7 +138,7 @@ contract UniswapV2RouterTest is Test {
         );
     }
 
-    function testAddLiquidityAmountBOptimalTooHighAmountATooLow() public {
+    function test_AddLiquidityAmountBOptimalTooHighAmountATooLow() public {
         address pairAddress = factory.createPair(
             address(tokenA),
             address(tokenB)
@@ -166,7 +167,7 @@ contract UniswapV2RouterTest is Test {
         );
     }
 
-    function testAddLiquidityAmountBOptimalIsTooHighAmountAOk() public {
+    function test_AddLiquidityAmountBOptimalIsTooHighAmountAOk() public {
         address pairAddress = factory.createPair(
             address(tokenA),
             address(tokenB)
@@ -198,7 +199,7 @@ contract UniswapV2RouterTest is Test {
         assertEq(liquidity, 1272792206135785543);
     }
 
-    function testRemoveLiquidity() public {
+    function test_RemoveLiquidity() public {
         tokenA.approve(address(router), 1 ether);
         tokenB.approve(address(router), 1 ether);
 
@@ -212,7 +213,7 @@ contract UniswapV2RouterTest is Test {
             address(this)
         );
 
-        address pairAddress = factory.getPair(address(tokenA), address(tokenB));
+        address pairAddress = factory.pairs(address(tokenA), address(tokenB));
         UniswapV2Pair pair = UniswapV2Pair(pairAddress);
         uint256 liquidity = pair.balanceOf(address(this));
 
@@ -236,7 +237,7 @@ contract UniswapV2RouterTest is Test {
         assertEq(tokenB.balanceOf(address(this)), 20 ether - 1000);
     }
 
-    function testRemoveLiquidityPartially() public {
+    function test_RemoveLiquidityPartially() public {
         tokenA.approve(address(router), 1 ether);
         tokenB.approve(address(router), 1 ether);
 
@@ -250,7 +251,7 @@ contract UniswapV2RouterTest is Test {
             address(this)
         );
 
-        address pairAddress = factory.getPair(address(tokenA), address(tokenB));
+        address pairAddress = factory.pairs(address(tokenA), address(tokenB));
         UniswapV2Pair pair = UniswapV2Pair(pairAddress);
         uint256 liquidity = pair.balanceOf(address(this));
 
@@ -275,7 +276,7 @@ contract UniswapV2RouterTest is Test {
         assertEq(tokenB.balanceOf(address(this)), 20 ether - 0.7 ether - 300);
     }
 
-    function testRemoveLiquidityInsufficientAAmount() public {
+    function test_RemoveLiquidityInsufficientAAmount() public {
         tokenA.approve(address(router), 1 ether);
         tokenB.approve(address(router), 1 ether);
 
@@ -289,7 +290,7 @@ contract UniswapV2RouterTest is Test {
             address(this)
         );
 
-        address pairAddress = factory.getPair(address(tokenA), address(tokenB));
+        address pairAddress = factory.pairs(address(tokenA), address(tokenB));
         UniswapV2Pair pair = UniswapV2Pair(pairAddress);
         uint256 liquidity = pair.balanceOf(address(this));
 
@@ -306,7 +307,7 @@ contract UniswapV2RouterTest is Test {
         );
     }
 
-    function testRemoveLiquidityInsufficientBAmount() public {
+    function test_RemoveLiquidityInsufficientBAmount() public {
         tokenA.approve(address(router), 1 ether);
         tokenB.approve(address(router), 1 ether);
 
@@ -320,7 +321,7 @@ contract UniswapV2RouterTest is Test {
             address(this)
         );
 
-        address pairAddress = factory.getPair(address(tokenA), address(tokenB));
+        address pairAddress = factory.pairs(address(tokenA), address(tokenB));
         UniswapV2Pair pair = UniswapV2Pair(pairAddress);
         uint256 liquidity = pair.balanceOf(address(this));
 
@@ -337,7 +338,7 @@ contract UniswapV2RouterTest is Test {
         );
     }
 
-    function testSwapExactTokensForTokens() public {
+    function test_SwapExactTokensForTokens() public {
         tokenA.approve(address(router), 1 ether);
         tokenB.approve(address(router), 2 ether);
         tokenC.approve(address(router), 1 ether);
@@ -386,7 +387,7 @@ contract UniswapV2RouterTest is Test {
         );
     }
 
-    function testSwapTokensForExactTokens() public {
+    function test_SwapTokensForExactTokens() public {
         tokenA.approve(address(router), 1 ether);
         tokenB.approve(address(router), 2 ether);
         tokenC.approve(address(router), 1 ether);

@@ -14,8 +14,7 @@ library UniswapV2Library {
         address factoryAddress,
         address tokenA,
         address tokenB
-    ) public       view
-returns (uint256 reserveA, uint256 reserveB) {
+    ) public returns (uint256 reserveA, uint256 reserveB) {
         (address token0, address token1) = sortTokens(tokenA, tokenB);
         (uint256 reserve0, uint256 reserve1, ) = IUniswapV2Pair(
             pairFor(factoryAddress, token0, token1)
