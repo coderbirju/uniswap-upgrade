@@ -72,6 +72,11 @@ contract UniswapV2Pair is ERC20, Math {
         token1 = token1_;
     }
 
+    /**
+     * @dev This function is used to mint new liquidity tokens for a liquidity pool.
+     * @param to The address of the user who will receive the new liquidity tokens.
+     * @return liquidity The amount of liquidity tokens that have been minted.
+     */
     function mint(address to) public returns (uint256 liquidity) {
         (uint112 reserve0_, uint112 reserve1_, ) = getReserves();
         uint256 balance0 = IERC20(token0).balanceOf(address(this));
@@ -95,6 +100,13 @@ contract UniswapV2Pair is ERC20, Math {
         emit Mint(to, amount0, amount1);
     }
 
+
+    /**
+     * @dev This function is used to burn liquidity tokens and withdraw an equivalent amount of tokens from the liquidity pool.
+     * @param to The address of the user who will receive the withdrawn tokens.
+     * @return amount0 The amount of token0 that has been withdrawn.
+     * @return amount1 The amount of token1 that has been withdrawn.
+    */
     function burn(address to)
         public
         returns (uint256 amount0, uint256 amount1)
@@ -122,6 +134,13 @@ contract UniswapV2Pair is ERC20, Math {
         emit Burn(msg.sender, amount0, amount1, to);
     }
 
+    /**
+     * @dev This function is used to swap tokens in the liquidity pool.
+     * @param amount0Out The amount of token0 to be received from the swap.
+     * @param amount1Out The amount of token1 to be received from the swap.
+     * @param to The address that will receive the swapped tokens.
+     * @param data Additional data passed to the `UniswapV2Call` function in the recipient contract.
+    */
     function swap(
         uint256 amount0Out,
         uint256 amount1Out,
@@ -194,6 +213,13 @@ contract UniswapV2Pair is ERC20, Math {
     }
 
 
+    /**
+     * @dev Updates the reserves and cumulative price after a swap or a mint/burn.
+     * @param balance0 The new balance of token0.
+     * @param balance1 The new balance of token1.
+     * @param reserve0_ The old reserve of token0.
+     * @param reserve1_ The old reserve of token1.
+     */
     function _update(
         uint256 balance0,
         uint256 balance1,
@@ -223,6 +249,13 @@ contract UniswapV2Pair is ERC20, Math {
         emit Sync(reserve0, reserve1);
     }
 
+    /**
+     * @dev Helper function to safely transfer tokens from an ERC20 token contract.
+     * @param token The address of the ERC20 token contract to transfer tokens from.
+     * @param to The address to which tokens will be transferred.
+     * @param value The amount of tokens to transfer.
+     * TransferFailed if the token transfer fails.
+    */
     function _safeTransfer(
         address token,
         address to,

@@ -18,6 +18,21 @@ contract UniswapV2Router {
         factory = IUniswapV2Factory(factoryAddress);
     }
 
+    /**
+        * @dev Adds liquidity to a Uniswap pool and mints liquidity tokens to the specified recipient.
+        * @param tokenA Address of token A.
+        * @param tokenB Address of token B.
+        * @param amountADesired Desired amount of token A.
+        * @param amountBDesired Desired amount of token B.
+        * @param amountAMin Minimum amount of token A that must be added to the pool, otherwise transaction reverts.
+        * @param amountBMin Minimum amount of token B that must be added to the pool, otherwise transaction reverts.
+        * @param to Address of the recipient of the liquidity tokens.
+        * @return amountA Amount of token A actually transferred to the pool.
+        * @return amountB Amount of token B actually transferred to the pool.
+        * @return liquidity Amount of liquidity tokens minted and transferred to the recipient.
+        * Emits a {Transfer} event from each token, indicating that the tokens were transferred to the pool.
+        * Emits a {Mint} event, indicating that liquidity tokens were minted and transferred to the recipient.
+    */
     function addLiquidity(
         address tokenA,
         address tokenB,
@@ -119,7 +134,12 @@ contract UniswapV2Router {
         _swap(amounts, path, to);
     }
 
-
+    /**
+    * @dev Performs a Uniswap swap between a path of tokens.
+    * @param amounts An array of amounts to swap in the path.
+    * @param path An array of addresses representing the path of tokens.
+    * @param to_ The address to send the swapped tokens to.
+    */
     function _swap(
         uint256[] memory amounts,
         address[] memory path,
@@ -145,6 +165,17 @@ contract UniswapV2Router {
         }
     }
 
+    /**
+    * @dev Calculates the optimal amount of tokenA and tokenB to add to a Uniswap pool to receive
+    the desired amount of liquidity tokens.
+    * @param tokenA The address of tokenA.
+    * @param tokenB The address of tokenB.
+    * @param amountADesired The desired amount of tokenA to add to the pool.
+    * @param amountBDesired The desired amount of tokenB to add to the pool.
+    * @param amountAMin The minimum amount of tokenA to add to the pool to receive the desired amount of liquidity tokens.
+    * @param amountBMin The minimum amount of tokenB to add to the pool to receive the desired amount of liquidity tokens.
+    *  The amount of tokenA and tokenB to add to the pool to receive the desired amount of liquidity tokens.
+    */
     function _calculateLiquidity(
         address tokenA,
         address tokenB,

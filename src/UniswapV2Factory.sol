@@ -19,6 +19,15 @@ contract UniswapV2Factory {
     mapping(address => mapping(address => address)) public pairs;
     address[] public allPairs;
 
+    /**
+     * @dev Creates a new UniswapV2Pair contract for the specified token pair.
+     * @param tokenA The address of one of the tokens in the pair.
+     * @param tokenB The address of the other token in the pair.
+     *  The address of the new UniswapV2Pair contract.
+     *  IdenticalAddresses if tokenA and tokenB are the same address.
+     *  ZeroAddress if tokenA or tokenB is the zero address.
+     *  PairExists if a pair for the specified token pair already exists.
+     */
     function createPair(address tokenA, address tokenB)
         public
         returns (address pair)
